@@ -35,19 +35,20 @@ CONSTANTS Server
 CONSTANTS Value
 
 \* Server states.
-CONSTANTS Follower, Candidate, Leader
+CONSTANTS Voter, Follower, Candidate, Elected, Leader
 
 \* A reserved value.
 CONSTANTS Nil
 
 \* Message types:
 CONSTANTS RequestVoteRequest, RequestVoteResponse,
+            ConfirmTermRequest, ConfirmTermResponse,
           AppendEntriesRequest, AppendEntriesResponse
 
 \* Used for filtering messages under different circumstance
 CONSTANTS EqualTerm, LessOrEqualTerm
 
-\* Limiting state space by limiting the number of elections and restarts           
+\* Limiting state space by limiting the number of elections and restarts
 CONSTANTS MaxElections, MaxRestarts
 ----
 \* Global variables
@@ -71,12 +72,15 @@ auxVars == <<acked, electionCtr, restartCtr>>
 
 \* The server's term number.
 VARIABLE currentTerm
-\* The server's state (Follower, Candidate, or Leader).
+\* The server's state (Voter, Follower, Candidate, Elected, or Leader).
 VARIABLE state
 \* The candidate the server voted for in its current term, or
 \* Nil if it hasn't voted for any.
 VARIABLE votedFor
-serverVars == <<currentTerm, state, votedFor>>
+\* The confirmed term known to the server.
+VARIABLE confimedTerm
+
+serverVars == <<currentTerm, state, votedFor, confimedTerm>>
 
 \* A Sequence of log entries. The index into this sequence is the index of the
 \* log entry. Unfortunately, the Sequence module defines Head(s) as the entry
